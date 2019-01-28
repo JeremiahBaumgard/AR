@@ -10,21 +10,21 @@
 
 <body style='margin : 0px; overflow: hidden;'>
 
-	<a-scene>
+	<a-scene stats embedded arjs='trackingMethod: best; debugUIEnabled: false'>
 		<!-- <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
 		<a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
 		<a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder> -->
-		<!-- <a-assets>
+		<a-assets>
 			<a-asset-item id="2CylinderEngine" src="lib/model/2CylinderEngine_2.0/glTF/2CylinderEngine.gltf">
-		</a-assets> -->
+		</a-assets>
 
 		<!-- Using the asset management system. -->
 		<!-- <a-gltf-model src="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610">
 			<a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation>
 			<a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation>
 			<a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation>
-
 		</a-gltf-model> -->
+
 		<!-- <a-entity gltf-model="#2CylinderEngine" scale="0.003 0.003 0.003" position=".242 1.164 -2.610"></a-entity> -->
 
 		<!-- <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane> -->
@@ -45,27 +45,30 @@
  -->
 
 
+		<a-assets>
+			<a-asset-item id="smiley" src="https://cdn.rawgit.com/KhronosGroup/glTF-Sample-Models/9176d098/1.0/SmilingFace/glTF/SmilingFace.gltf"></a-asset-item>
+		</a-assets>
 
 
-		<a-scene stats embedded arjs='trackingMethod: best; debugUIEnabled: false'>
-			<a-assets>
-				<a-asset-item id="smiley" src="https://cdn.rawgit.com/KhronosGroup/glTF-Sample-Models/9176d098/1.0/SmilingFace/glTF/SmilingFace.gltf"></a-asset-item>
-			</a-assets>
+		<a-marker preset="hiro">
+
+			<!-- <a-entity gltf-model="#smiley" rotation="180 0 0">
+				<a-animation attribute="position" dur="5000" direction="alternate" from="0 1 0" to="0 5 0" repeat="indefinite"></a-animation>
+			</a-entity> -->
+
+			<a-gltf-model src="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610">
+				<a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation>
+				<a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation>
+				<a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation>
+			</a-gltf-model>
 
 
-			<a-marker preset="hiro">
+			<a-box position='0 1 0' material='color: blue;'>
+				<a-animation attribute="rotation" dur="2000" fill="forwards" from="0 0 0" to="360 360 360" repeat="indefinite"></a-animation>
+			</a-box>
 
-				<a-entity gltf-model="#smiley" rotation="180 0 0">
-					<a-animation attribute="position" dur="5000" direction="alternate" from="0 1 0" to="0 5 0" repeat="indefinite"></a-animation>
-				</a-entity>
-
-				<a-box position='0 1 0' material='color: green;'>
-					<a-animation attribute="rotation" dur="2000" fill="forwards" from="0 0 0" to="360 360 360" repeat="indefinite"></a-animation>
-				</a-box>
-
-			</a-marker>
-			<a-entity camera></a-entity>
-		</a-scene>
+		</a-marker>
+		<a-entity camera></a-entity>
 
 
 
