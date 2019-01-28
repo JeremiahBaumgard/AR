@@ -4,6 +4,8 @@
 <head>
 	<script src="lib/js/aframe-v0.8.2.min.js"></script>
 	<script src="lib/js/aframe-environment-component.min.js"></script>
+	<script src="lib/js/aframe-extras.loaders.min.js"></script>
+	<script src="lib/js/aframe-ar.min.js"></script>
 </head>
 
 <body>
@@ -17,24 +19,31 @@
 		</a-assets>
 
 		<!-- Using the asset management system. -->
-		<!-- <a-gltf-model src="#2CylinderEngine"></a-gltf-model> -->
-
-
-		<a-gltf-model src="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610">
+		<!-- <a-gltf-model src="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610">
 			<a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation>
 			<a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation>
 			<a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation>
 
-		</a-gltf-model>
+		</a-gltf-model> -->
 		<!-- <a-entity gltf-model="#2CylinderEngine" scale="0.003 0.003 0.003" position=".242 1.164 -2.610"></a-entity> -->
 
-		<a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+		<!-- <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane> -->
 
 		<a-sky color="#ECECEC"></a-sky>
 		<!-- <a-text value="Hello, A-Frame!" color="#BBB" position="-0.9 0.2 -3" scale="1.5 1.5 1.5"></a-text> -->
 
 		<!-- Out of the box environment! -->
 		<a-entity environment="preset: forest; dressingAmount: 500"></a-entity>
+
+
+		<a-marker preset="hiro">
+			<a-entity gltf-model="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610">
+				<!-- <a-animation attribute="position" dur="5000" direction="alternate" from="0 1 0" to="0 5 0" repeat="indefinite"></a-animation> -->
+			</a-entity>
+		</a-marker>
+		<a-entity camera></a-entity>
+
+
 
 	</a-scene>
 
