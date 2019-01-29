@@ -153,7 +153,7 @@
 		<!-- a-marker-camera is good for getting the marker location and then when moving away it remains that in that spot. -->
 		<a-marker preset='custom' type='pattern' url='lib/marker/pattern-marker-bekum.patt'>
 			<!-- <a-box log="Hello, Box!"></a-box> -->
-			<a-entity scale="0.5 0.5 0.5" position="-0.120 2.6 -0.250" rotation='-90 0 0'>
+			<a-entity scale="0.5 0.5 0.5" position="-0.120 2.600 0.700" rotation='-90 0 0'>
 				<a-entity position='-4.3 3 -3' rotation='0 0 0'>
 					<a-box position='0 0 0' scale='0.25 0.25 0.25' material='color: blue;' depth='1' height='1.5' width='10'
 					 disassemble-click>
@@ -193,6 +193,7 @@
 			<a-box position='0 0 0' scale='1 1 1' material='color: blue;' model-opacity="1">
 				<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
 				<a-box position='-2 0 0' material='color: red;'>
+					<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
 					<!-- <a-animation attribute="rotation" dur="2000" fill="forwards" from="0 0 0" to="360 360 360" repeat="indefinite"></a-animation> -->
 				</a-box>
 				<!-- <a-animation attribute="rotation" dur="2000" fill="forwards" from="0 0 0" to="360 360 360" repeat="indefinite"></a-animation> -->
