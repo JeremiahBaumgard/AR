@@ -1,0 +1,128 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "THREE.GLTFExporter"
+  },
+  "scenes": [
+    {
+      "nodes": [
+        1
+      ],
+      "name": "Scene"
+    }
+  ],
+  "scene": 0,
+  "nodes": [
+    {
+      "name": "mesh 15 990744X-1/011988-1",
+      "mesh": 0
+    },
+    {
+      "name": "model_14.obj",
+      "children": [
+        0
+      ]
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 1152,
+      "target": 34962,
+      "byteStride": 12
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 1152,
+      "byteLength": 1152,
+      "target": 34962,
+      "byteStride": 12
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 2304,
+      "byteLength": 768,
+      "target": 34962,
+      "byteStride": 8
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 3072,
+      "uri": "data:application/octet-stream;base64,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"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 96,
+      "max": [
+        -0.13645587861537933,
+        0.019565850496292114,
+        0.28888800740242004
+      ],
+      "min": [
+        -0.1428447961807251,
+        0.012662548571825027,
+        -0.2868880033493042
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 96,
+      "max": [
+        0.993287980556488,
+        0.9221603870391846,
+        1
+      ],
+      "min": [
+        -0.993287980556488,
+        -0.9221603870391846,
+        -1
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 96,
+      "max": [
+        0.004999999888241291,
+        0.004999999888241291
+      ],
+      "min": [
+        -0.008660254068672657,
+        -0.006000000052154064
+      ],
+      "type": "VEC2"
+    }
+  ],
+  "materials": [
+    {
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0.5,
+        "roughnessFactor": 0.5
+      },
+      "name": "15"
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "mode": 4,
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "material": 0
+        }
+      ]
+    }
+  ]
+}
