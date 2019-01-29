@@ -1,0 +1,489 @@
+<!doctype HTML>
+<html>
+
+<head>
+	<script src="lib/js/aframe-v0.8.2.min.js"></script>
+	<script src="lib/js/aframe-animation-component.min.js"></script>
+	<script src="lib/js/anime.min.js"></script>
+	<script src="lib/js/aframe-environment-component.min.js"></script>
+	<script src="lib/js/aframe-extras.loaders.min.js"></script>
+	<script src="lib/js/aframe-ar.min.js"></script>
+</head>
+
+<body style='margin : 0px; overflow: hidden;'>
+
+	<script>
+		AFRAME.registerComponent('log', {
+			schema: { type: 'string' },
+
+			init: function () {
+				var stringToLog = this.data;
+				console.log(stringToLog);
+			}
+		});
+		AFRAME.registerComponent("click-me", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					// document.getElementById('KnifeModelAnimateID').setAttribute('direction', 'reverse');
+					// console.log(document.getElementById('KnifeModelAnimateID').getAttribute('direction'));
+
+					ToggleRotateAnimation(this);
+					// console.log(document.getElementById('Knife').outerHTML);
+
+					// UpdateAnimation(this);
+					// this.object3D.position.set(1, 2, 3);
+					// this.object3D.position.x += 5;
+					// this.object3D.rotation.x = THREE.Math.degToRad(0);
+					// this.object3D.rotation.set(THREE.Math.degToRad(0),THREE.Math.degToRad(0),THREE.Math.degToRad(0));
+					// document.getElementById("ball").setAttribute('position', '-3 0.59 -3')
+					// this.setAttribute('rotation', {
+					// 	x: 3,
+					// 	y: 0.59,
+					// 	z: -3
+					// });
+				})
+			}
+		})
+		AFRAME.registerComponent("disassemble-click", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					console.log('clicked - disassemble');
+					StartAnimation('disassemble');
+				})
+			}
+		})
+
+		AFRAME.registerComponent("assemble-click", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					console.log('clicked - assemble');
+					StartAnimation('assemble');
+				})
+			}
+		})
+		AFRAME.registerComponent("animate-click", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					console.log('clicked - animate');
+					StartAnimation('animate');
+				})
+			}
+		})
+
+		// use 'model-opacity' to fade models, else use fade for primitives.
+		// 	example:
+		// 		<a-gltf-model src="#Avocado" scale="10 10 10" position="0 0 -3" model-opacity="1">
+		// 			<a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation>
+		//		 </a-gltf-model>
+		AFRAME.registerComponent('model-opacity', {
+			schema: { default: 1.0 },
+			init: function () {
+				this.el.addEventListener('model-loaded', this.update.bind(this));
+			},
+			update: function () {
+				// console.log('updating');
+				var mesh = this.el.getObject3D('mesh');
+				var data = this.data;
+				if (!mesh) { return; }
+				mesh.traverse(function (node) {
+					if (node.isMesh) {
+						node.material.opacity = data;
+						node.material.transparent = data < 1.0;
+						node.material.needsUpdate = true;
+					}
+				});
+			}
+		});
+
+	</script>
+
+	<!-- <a-scene log="Hello, Scene!">
+		<a-box log="Hello, Box!"></a-box>
+	</a-scene> -->
+
+	<!-- <a-scene stats embedded arjs='trackingMethod: best; debugUIEnabled: false'> -->
+	<a-scene id='sceneID' cursor="rayOrigin: mouse">
+
+
+
+
+		<!-- <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+		<a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+		<a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder> -->
+		<a-assets id='assetsID'>
+			<!-- <a-asset-item id="2CylinderEngine" src="lib/model/2CylinderEngine_2.0/glTF/2CylinderEngine.gltf"></a-asset-item> -->
+			<a-asset-item id="Avocado" src="lib/model/Avocado_2.0/glTF/Avocado.gltf"></a-asset-item>
+			<!-- <a-asset-item id="Knife" src="lib/model/953959X/953959X.gltf"></a-asset-item> -->
+		</a-assets>
+
+		<!-- Using the asset management system. -->
+		<!-- <a-gltf-model src="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610"> -->
+		<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+		<!-- </a-gltf-model> -->
+
+		<!-- <a-entity gltf-model="#2CylinderEngine" scale="0.003 0.003 0.003" position=".242 1.164 -2.610"></a-entity> -->
+
+		<!-- <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane> -->
+
+		<!-- <a-sky color="#ECECEC"></a-sky> -->
+		<!-- <a-text value="Hello, A-Frame!" color="#BBB" position="-0.9 0.2 -3" scale="1.5 1.5 1.5"></a-text> -->
+
+		<!-- Out of the box environment! -->
+		<!-- <a-entity environment="preset: forest; dressingAmount: 500"></a-entity> -->
+
+
+		<!-- <a-gltf-model src="#2CylinderEngine" scale="0.009 0.009 0.009" position="-1 -10 0"> -->
+		<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+		<!-- </a-gltf-model> -->
+
+
+
+
+		<!-- <a-gltf-model id='KnifeModelID' src='#Knife' scale='10 10 10' position='2.651 1.500 -5' rotation='90 0 0' model-opacity="1" click-me> -->
+		<!-- <a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation> -->
+		<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation id='KnifeModelAnimateID' attribute="rotation" to="0 180 90" direction="normal" dur="3500" repeat="0"></a-animation> -->
+		<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+		<!-- </a-gltf-model> -->
+
+		<a-marker preset='custom' type='pattern' url='lib/marker/pattern-marker-bekum.patt'>
+			<!-- <a-box log="Hello, Box!"></a-box> -->
+			<a-entity position='0 0 0'>
+				<a-entity position='-4.3 3 -3' rotation='0 0 0'>
+					<a-box position='0 0 0' scale='0.25 0.25 0.25' material='color: blue;' depth='1' height='1.5' width='10'
+					 disassemble-click>
+						<a-text value='Disassemble' color='#BBB' position='0 0 0.5' scale='1 1 1' width='24' align='center'></a-text>
+					</a-box>
+					<a-box position='0 -0.75 0' scale='0.25 0.25 0.25' material='color: blue;' depth='1' height='1.5' width='10'
+					 assemble-click>
+						<a-text value='Assemble' color='#BBB' position='0 0 0.5' scale='1 1 1' width='24' align='center'></a-text>
+					</a-box>
+					<a-box position='0 -1.5 0' scale='0.25 0.25 0.25' material='color: blue;' depth='1' height='1.5' width='10'
+					 animate-click>
+						<a-text value='Animate' color='#BBB' position='0 0 0.5' scale='1 1 1' width='24' align='center'></a-text>
+					</a-box>
+
+				</a-entity>
+
+
+				<a-gltf-model id="mainModelID" scale='10 10 10' position='3.651 1.500 -5' rotation='90 0 0' click-me>
+					<!-- <a-animation attribute="visible" begin="3000" to="false"></a-animation> -->
+					<!-- <a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation> -->
+					<!-- <a-animation attribute="position" to="2.651 1.500 -3" direction="alternate" dur="1000" repeat="1"></a-animation> -->
+					<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+					<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+				</a-gltf-model>
+
+
+				<a-gltf-model id='AvocadoID' src="#Avocado" scale="10 10 10" position="0 0 -3" model-opacity="1">
+					<a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation>
+					<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+					<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+					<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+				</a-gltf-model>
+
+				<a-box position='-1 0 0' scale='0.25 0.25 0.25' material='color: blue;' model-opacity="1">
+					<a-box position='-3 0 0' scale='0.25 0.25 0.25' material='color: red;'>
+						<!-- <a-animation attribute="rotation" dur="2000" fill="forwards" from="0 0 0" to="360 360 360" repeat="indefinite"></a-animation> -->
+					</a-box>
+					<!-- <a-animation attribute="rotation" dur="2000" fill="forwards" from="0 0 0" to="360 360 360" repeat="indefinite"></a-animation> -->
+				</a-box>
+				<a-sphere position="1 0.59 -4" model-opacity="1" click-me>
+					<!-- <a-animation attribute="material.opacity" begin="3000" to="0"></a-animation> -->
+					<a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation>
+				</a-sphere>
+			</a-entity>
+		</a-marker>
+		<a-entity camera></a-entity>
+	</a-scene>
+
+	<script>
+		// setTimeout(function () {
+		// 	var el = document.getElementById('test');
+		// 	el.setAttribute('position', '3 0.59 -3');
+		// }, 2000);
+
+
+
+
+
+		AddModelsToScene();
+
+		function AddModelsToScene() {
+			// add them to the assets
+			var assets = document.getElementById('assetsID');
+
+			// clear all animation first
+			// parent.innerHTML = "";
+			// Create animation.
+
+
+			for (var index = 0; index < 25; index++) {
+				var assetItem = document.createElement('a-asset-item');
+				var assetItemData = {
+					id: 'modelAssetItem_' + index,
+					src: 'lib/model/953959X/model_' + index + '.gltf'
+				};
+
+				for (var key in assetItemData) {
+					if (assetItemData.hasOwnProperty(key)) {
+						assetItem.setAttribute(key, assetItemData[key]);
+					}
+				}
+
+				// Object.keys(assetItemData).forEach(function (attr) {
+				// 	assetItem.setAttribute(attr, assetItemData[attr]);
+				// });
+
+				// Append animation.
+				assets.appendChild(assetItem);
+			}
+
+			// add them too the main entity container
+			var entity = document.getElementById('mainModelID');
+			for (var index = 0; index < 25; index++) {
+				var gltfModel = document.createElement('a-gltf-model');
+				var gltfModelData = {
+					id: 'model_' + index,
+					src: '#modelAssetItem_' + index,
+					// scale: '5 5 5',
+					// position: '2.651 1.500 -5'
+				};
+				for (var key in gltfModelData) {
+					if (gltfModelData.hasOwnProperty(key)) {
+						gltfModel.setAttribute(key, gltfModelData[key]);
+					}
+				}
+
+				// Object.keys(gltfModelData).forEach(function (attr) {
+				// 	gltfModel.setAttribute(attr, gltfModelData[attr]);
+				// });
+
+				// Append animation.
+				entity.appendChild(gltfModel);
+			}
+
+		}
+
+
+		var toggleRotateTo = '90 0 0'; // home default
+		function ToggleRotateAnimation(parent) {
+			// clear all animation first
+			var mainAnimation = parent.getElementsByTagName('a-animation')[0];
+
+			// if it exists then remove it.
+			if (mainAnimation) {
+				mainAnimation.parentNode.removeChild(mainAnimation);
+			}
+			// swap the toggle
+			if (toggleRotateTo == '90 0 0') {
+				toggleRotateTo = '45 0 0';
+			} else {
+				toggleRotateTo = '90 0 0';
+			}
+
+			// parent.innerHTML = "";
+			// Create animation.
+			var animation = document.createElement('a-animation');
+			var animationData = {
+				attribute: 'rotation',
+				// begin: 'set-image-fade',
+				direction: 'normal',
+				dur: '1000',
+				repeat: '0',
+				// from: 'white',
+				to: toggleRotateTo
+			};
+			for (var key in animationData) {
+				if (animationData.hasOwnProperty(key)) {
+					animation.setAttribute(key, animationData[key]);
+				}
+			}
+
+			// Object.keys(animationData).forEach(function (attr) {
+			// 	animation.setAttribute(attr, animationData[attr]);
+			// });
+
+			// Append animation.
+			parent.appendChild(animation);
+			// parent.addState('set-image-animation-ready');
+
+			// console.log("add animation to:" + mainAnimation.outerHTML);
+
+		}
+
+
+		var modelPartsList = {
+			// note: files start at 0 and mesh starts at 1, so -1 for mesh to model number.
+			'guideBarBlockFasteners': 'model_0',
+			'cylinderFastenerBolts': 'model_1',
+			'cylinderFastenerWashers': 'model_2',
+			'pneumaticCylinder': 'model_3',
+			'cylinderAdapterNut': 'model_4',
+			'bushings': 'model_5',
+			'blockOfMica': 'model_6',
+			'cylinderAdapter1': 'model_7',
+			'cylinderAdapter2': 'model_8',
+			'cylinderAdapter3': 'model_9',
+			'bladeHolders1': 'model_10',
+			'bladeArms': 'model_11',
+			'blade': 'model_12', // and the guide bars (they are together)
+			'bladeHolders2': 'model_13',
+			'bladeHolders3': 'model_14',
+			'cylinderAdapter4': 'model_15',
+			'cylinderAdapter5': 'model_16',
+			'guideBarBlocksSomething': 'model_17',
+			'guideBarBlocksBushings': 'model_18',
+			'bladeFasteners': 'model_19',
+			'guideBarFasteners': 'model_20',
+			'guideBarBlocks': 'model_21',
+			'guideBarBlockFastenersWashers': 'model_22',
+			'guideBarWashers': 'model_23',
+			'mountingBlock': 'model_24',
+		}
+
+		function AddModelPositionAnimation(parent, position) {
+			// clear all animation first
+			var mainAnimation = parent.getElementsByTagName('a-animation')[0];
+			// if it exists then remove it.
+			if (mainAnimation) {
+				mainAnimation.parentNode.removeChild(mainAnimation);
+			}
+
+			// parent.innerHTML = "";
+			// Create animation.
+			var animation = document.createElement('a-animation');
+			var animationData = {
+				attribute: 'position',
+				// begin: 'set-image-fade',
+				direction: 'normal',
+				dur: '1000',
+				repeat: '0',
+				// from: 'white',
+				to: position
+			};
+			for (var key in animationData) {
+				if (animationData.hasOwnProperty(key)) {
+					animation.setAttribute(key, animationData[key]);
+				}
+			}
+
+			// Object.keys(animationData).forEach(function (attr) {
+			// 	animation.setAttribute(attr, animationData[attr]);
+			// });
+
+			// Append animation.
+			parent.appendChild(animation);
+			// parent.addState('set-image-animation-ready');
+
+			// console.log("add animation to:" + mainAnimation.outerHTML);
+
+		}
+
+
+		var stepNumber = 0;
+		var action = 'disassemble';
+		var buttonName = '';
+		function BreakAndBuild() {
+			console.log('step: ' + stepNumber);
+			if (stepNumber > 24) {
+				action = 'assemble';
+				stepNumber = 24;
+			}
+			if (stepNumber < 0) {
+				action = 'disassemble';
+				stepNumber = 0;
+				return;
+			}
+			var modelEl = document.getElementById('model_' + stepNumber);
+			if (modelEl && action == 'disassemble') {
+				var position = '0.5 0 0';
+				AddModelPositionAnimation(modelEl, position);
+				stepNumber++;
+			}
+			if (modelEl && action == 'assemble') {
+				var position = '0 0 0';
+				AddModelPositionAnimation(modelEl, position);
+				stepNumber--;
+			}
+		}
+
+		var animateAction = 'extend';
+		function AnimateModel() {
+			console.log('animateAction: ' + animateAction);
+			var modelEl_1 = document.getElementById('model_12');
+			var modelEl_2 = document.getElementById('model_9');
+			var modelEl_3 = document.getElementById('model_10');
+			var modelEl_4 = document.getElementById('model_6');
+			var modelEl_5 = document.getElementById('model_11');
+			var modelEl_6 = document.getElementById('model_19');
+			var modelEl_7 = document.getElementById('model_5');
+			var modelEl_8 = document.getElementById('model_2');
+			var modelEl_9 = document.getElementById('model_7');
+			var modelEl_10 = document.getElementById('model_8');
+			var modelEl_11 = document.getElementById('model_4');
+			var modelEl_12 = document.getElementById('model_14');
+			var modelEl_13 = document.getElementById('model_20');
+			var modelEl_14 = document.getElementById('model_13');
+			var modelEl_15 = document.getElementById('model_23');
+
+			var position = '0 0 0';
+			if (animateAction == 'extend') {
+				position = '0.2 0 0';
+				animateAction = 'retract';
+			} else
+				if (animateAction == 'retract') {
+					position = '0 0 0';
+					animateAction = 'extend';
+				}
+			AddModelPositionAnimation(modelEl_1, position);
+			AddModelPositionAnimation(modelEl_2, position);
+			AddModelPositionAnimation(modelEl_3, position);
+			AddModelPositionAnimation(modelEl_4, position);
+			AddModelPositionAnimation(modelEl_5, position);
+			AddModelPositionAnimation(modelEl_6, position);
+			AddModelPositionAnimation(modelEl_7, position);
+			AddModelPositionAnimation(modelEl_8, position);
+			AddModelPositionAnimation(modelEl_9, position);
+			AddModelPositionAnimation(modelEl_10, position);
+			AddModelPositionAnimation(modelEl_11, position);
+			AddModelPositionAnimation(modelEl_12, position);
+			AddModelPositionAnimation(modelEl_13, position);
+			AddModelPositionAnimation(modelEl_14, position);
+			AddModelPositionAnimation(modelEl_15, position);
+		}
+
+
+		function StartAnimation(buttonClicked) {
+			buttonName = buttonClicked;
+			if (buttonClicked == 'disassemble') {
+				BreakAndBuild();
+			}
+			if (buttonClicked == 'assemble') {
+
+			}
+			if (buttonClicked == 'animate') {
+				AnimateModel();
+			}
+		}
+		var animationTiming;
+		document.getElementById('mainModelID').addEventListener('animationend', function (e) {
+			clearTimeout(animationTiming);
+			animationTiming = setTimeout(function () { StartAnimation(buttonName); }, 100);
+		});
+
+		document.getElementById('AvocadoID').addEventListener('animationend', function (e) {
+			console.log('animation completed for Avocado');
+		});
+
+
+	</script>
+
+
+</body>
+
+</html>
