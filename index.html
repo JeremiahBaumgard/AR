@@ -152,7 +152,7 @@
 
 		<a-marker preset='custom' type='pattern' url='lib/marker/pattern-marker-bekum.patt'>
 			<!-- <a-box log="Hello, Box!"></a-box> -->
-			<a-entity scale="10 10 10" position="-1 -10 0">
+			<a-entity scale="10 10 10" position="-1 -10 -10">
 				<a-entity position='-4.3 3 -3' rotation='0 0 0'>
 					<a-box position='0 0 0' scale='0.25 0.25 0.25' material='color: blue;' depth='1' height='1.5' width='10'
 					 disassemble-click>
@@ -180,7 +180,7 @@
 			</a-entity>
 
 			<a-gltf-model id='AvocadoID' src="#Avocado" scale="10 10 10" position="0 0 -3" model-opacity="1">
-				<a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation>
+				<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
 				<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
 				<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
 				<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
@@ -194,7 +194,7 @@
 			</a-box>
 			<a-sphere position="1 0.59 -4" model-opacity="1" click-me>
 				<!-- <a-animation attribute="material.opacity" begin="3000" to="0"></a-animation> -->
-				<a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation>
+				<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
 			</a-sphere>
 
 		</a-marker>
