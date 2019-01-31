@@ -8,7 +8,7 @@
 	<!-- <script src="lib/js/anime.js"></script> -->
 	<script src="lib/js/aframe-environment-component.min.js"></script>
 	<script src="lib/js/aframe-extras.loaders.min.js"></script>
-	<!-- <script src="lib/js/aframe-ar.min.js"></script> -->
+	<script src="lib/js/aframe-ar.min.js"></script>
 </head>
 
 <body style='margin : 0px; overflow: hidden;'>
@@ -170,9 +170,9 @@
 		<!-- </a-gltf-model> -->
 
 		<!-- a-marker-camera is good for getting the marker location and then when moving away it remains that in that spot. -->
-		<!-- <a-marker preset='custom' type='pattern' url='lib/marker/pattern-marker-bekum.patt'> -->
-		<!-- <a-entity scale="0.5 0.5 0.5" position="-0.120 2.600 0.700" rotation='-90 0 0'> -->
-		<a-entity scale="0.5 0.5 0.5" position="1.120 0.600 0.00" rotation='0 0 0'>
+		<a-marker preset='custom' type='pattern' url='lib/marker/pattern-marker-bekum.patt'>
+		<a-entity scale="0.5 0.5 0.5" position="-0.120 2.600 0.700" rotation='-90 0 0'>
+<!-- 		<a-entity scale="0.5 0.5 0.5" position="1.120 0.600 0.00" rotation='0 0 0'> -->
 			<!-- <a-entity position='-4.3 3 -3' rotation='0 0 0'> -->
 			<a-entity position='-5.3 3 -3' rotation='0 0 0'>
 				<a-box id='disassembleBtnID' position='0 0 0' scale='0.25 0.25 0.25' material='color: blue;' depth='1' height='1.5'
@@ -220,8 +220,8 @@
 		</a-sphere> -->
 
 
-		<!-- </a-marker> -->
-		<!-- <a-entity camera></a-entity> -->
+		</a-marker>
+		<a-entity camera></a-entity>
 	</a-scene>
 
 	<script>
