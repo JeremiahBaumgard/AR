@@ -1,0 +1,505 @@
+<!doctype HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<script src="lib/js/aframe-v0.8.2.min.js"></script>
+	<script src="lib/js/aframe-animation-component.min.js"></script>
+	<!-- <script src="lib/js/anime.js"></script> -->
+	<script src="lib/js/aframe-environment-component.min.js"></script>
+	<script src="lib/js/aframe-extras.loaders.min.js"></script>
+	<script src="lib/js/aframe-ar.min.js"></script>
+</head>
+
+<body style='margin : 0px; overflow: hidden;'>
+
+	<script>
+		AFRAME.registerComponent('log', {
+			schema: { type: 'string' },
+
+			init: function () {
+				var stringToLog = this.data;
+				console.log(stringToLog);
+			}
+		});
+		AFRAME.registerComponent("click-me", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					// '90 0 0'; // home default
+					var toggleRotateTo = this.getAttribute('rotation'); // rotation and position returns object.
+					// swap the toggle
+					if (toggleRotateTo.x == '90') {
+						this.emit('rot45');
+						console.log('rotating to 45');
+					} else {
+						this.emit('rot90');
+						console.log('rotating to 90');
+					}
+				})
+			}
+		})
+		AFRAME.registerComponent("disassemble-click", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					console.log('clicked - disassemble');
+					if (knifeObject.animationActive == 'moveEachToDisassemble') {
+						knifeObject.animationActive = '';
+						document.getElementById('disassembleBtnID').setAttribute('material', 'color:blue');
+					} else {
+						document.getElementById('disassembleBtnID').setAttribute('material', 'color:green');
+						document.getElementById('assembleBtnID').setAttribute('material', 'color:blue');
+						document.getElementById('animateBtnID').setAttribute('material', 'color:blue');
+						knifeObject.moveEachToDisassemble();
+					}
+				})
+			}
+		})
+
+		AFRAME.registerComponent("assemble-click", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					console.log('clicked - assemble');
+					if (knifeObject.animationActive == 'moveEachToAssemble') {
+						knifeObject.animationActive = '';
+						document.getElementById('assembleBtnID').setAttribute('material', 'color:blue');
+					} else {
+						document.getElementById('assembleBtnID').setAttribute('material', 'color:green');
+						document.getElementById('disassembleBtnID').setAttribute('material', 'color:blue');
+						document.getElementById('animateBtnID').setAttribute('material', 'color:blue');
+						knifeObject.moveEachToAssemble();
+					}
+				})
+			}
+		})
+		AFRAME.registerComponent("animate-click", {
+			init: function () {
+				this.el.addEventListener("click", function () {
+					console.log('clicked - animate');
+					if (knifeObject.animationActive == 'moveToExtend' || knifeObject.animationActive == 'moveToRetract') {
+						knifeObject.moveAllToHome();
+						document.getElementById('animateBtnID').setAttribute('material', 'color:blue');
+					} else {
+						document.getElementById('animateBtnID').setAttribute('material', 'color:green');
+						document.getElementById('disassembleBtnID').setAttribute('material', 'color:blue');
+						document.getElementById('assembleBtnID').setAttribute('material', 'color:blue');
+						knifeObject.moveAllToHome();
+						setTimeout(function () { knifeObject.moveToExtend(); }, 500);
+					}
+				})
+			}
+		})
+
+		// use 'model-opacity' to fade models, else use fade for primitives.
+		// 	example:
+		// 		<a-gltf-model src="#Avocado" scale="10 10 10" position="0 0 -3" model-opacity="1">
+		// 			<a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation>
+		//		 </a-gltf-model>
+		AFRAME.registerComponent('model-opacity', {
+			schema: { default: 1.0 },
+			init: function () {
+				this.el.addEventListener('model-loaded', this.update.bind(this));
+			},
+			update: function () {
+				// console.log('updating');
+				var mesh = this.el.getObject3D('mesh');
+				var data = this.data;
+				if (!mesh) { return; }
+				mesh.traverse(function (node) {
+					if (node.isMesh) {
+						node.material.opacity = data;
+						node.material.transparent = data < 1.0;
+						node.material.needsUpdate = true;
+					}
+				});
+			}
+		});
+
+	</script>
+
+	<!-- <a-scene log="Hello, Scene!">
+		<a-box log="Hello, Box!"></a-box>
+	</a-scene> -->
+
+	<!-- <a-scene stats embedded arjs='trackingMethod: best; debugUIEnabled: false'> -->
+	<a-scene id='sceneID' arjs='trackingMethod: best; debugUIEnabled: false' cursor="rayOrigin: mouse">
+
+
+
+
+		<!-- <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+		<a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+		<a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder> -->
+		<a-assets id='assetsID'>
+			<a-asset-item id="2CylinderEngine" src="lib/model/2CylinderEngine_2.0/glTF/2CylinderEngine.gltf"></a-asset-item>
+			<!-- <a-asset-item id="Avocado" src="lib/model/Avocado_2.0/glTF/Avocado.gltf"></a-asset-item> -->
+			<!-- <a-asset-item id="Knife" src="lib/model/953959X/953959X.gltf"></a-asset-item> -->
+		</a-assets>
+
+		<!-- Using the asset management system. -->
+		<a-gltf-model src="#2CylinderEngine" scale="0.003 0.003 0.003" position="0.242 1.164 -2.610">
+		<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+		</a-gltf-model>
+
+		<a-entity gltf-model="#2CylinderEngine" scale="0.003 0.003 0.003" position=".242 1.164 -2.610"></a-entity>
+
+		<!-- <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane> -->
+
+		<!-- <a-sky color="#ECECEC"></a-sky> -->
+		<!-- <a-text value="Hello, A-Frame!" color="#BBB" position="-0.9 0.2 -3" scale="1.5 1.5 1.5"></a-text> -->
+
+		<!-- Out of the box environment! -->
+		<!-- <a-entity environment="preset: forest; dressingAmount: 500"></a-entity> -->
+
+
+		<!-- <a-gltf-model src="#2CylinderEngine" scale="0.009 0.009 0.009" position="-1 -10 0"> -->
+		<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+		<!-- </a-gltf-model> -->
+
+
+
+
+		<!-- <a-gltf-model id='KnifeModelID' src='#Knife' scale='10 10 10' position='2.651 1.500 -5' rotation='90 0 0' model-opacity="1" click-me> -->
+		<!-- <a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation> -->
+		<!-- <a-animation attribute="position" to="0.242 1.5 -2.610" direction="alternate" dur="1500" repeat="indefinite"></a-animation> -->
+		<!-- <a-animation id='KnifeModelAnimateID' attribute="rotation" to="0 180 90" direction="normal" dur="3500" repeat="0"></a-animation> -->
+		<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+		<!-- </a-gltf-model> -->
+
+		<!-- a-marker-camera is good for getting the marker location and then when moving away it remains that in that spot. -->
+		<a-marker preset='custom' type='pattern' url='lib/marker/pattern-marker-bekum.patt'>
+		<a-entity scale="0.5 0.5 0.5" position="-0.120 2.600 0.700" rotation='-90 0 0'>
+<!-- 		<a-entity scale="0.5 0.5 0.5" position="1.120 0.600 0.00" rotation='0 0 0'> -->
+			<a-entity position='-2.351 4.527 -4.500' rotation='0 0 0'>
+				<a-box id='disassembleBtnID' position='0 0.5 0' scale='0.35 0.50 0.25' material='color: blue;' depth='1' height='1.5'
+				 width='10' disassemble-click>
+					<a-text value='Disassemble' color='#BBB' position='0 0 0.5' scale='1 1 1' width='24' align='center'></a-text>
+				</a-box>
+				<a-box id='assembleBtnID' position='3.7 0.5 0' scale='0.35 0.50 0.25' material='color: blue;' depth='1' height='1.5'
+				 width='10' assemble-click>
+					<a-text value='Assemble' color='#BBB' position='0 0 0.5' scale='1 1 1' width='24' align='center'></a-text>
+				</a-box>
+				<a-box id='animateBtnID' position='0 -5.5 0' scale='0.35 0.50 0.25' material='color: blue;' depth='1' height='1.5'
+				 width='10' animate-click>
+					<a-text value='Animate' color='#BBB' position='0 0 0.5' scale='1 1 1' width='24' align='center'></a-text>
+				</a-box>
+			</a-entity>
+
+
+			<a-gltf-model id="mainModelID" scale='10 10 10' position='3.651 1.500 -5' rotation='90 0 0' click-me
+			 animation__rot45="property: rotation; dir: normal; dur: 1000; loop: 0; to: 45 0 0; startEvents: rot45"
+			 animation__rot90="property: rotation; dir: normal; dur: 1000; loop: 0; to: 90 0 0; startEvents: rot90">
+				<!-- <a-animation attribute="visible" begin="3000" to="false"></a-animation> -->
+				<!-- <a-animation attribute="model-opacity" dur="5000" from="1" to="0" repeat="0"></a-animation> -->
+				<!-- <a-animation attribute="position" to="2.651 1.500 -3" direction="alternate" dur="1000" repeat="1"></a-animation> -->
+				<!-- <a-animation attribute="rotation" to="0 180 90" direction="alternate" dur="3500" repeat="indefinite"></a-animation> -->
+				<!-- <a-animation attribute="rotation" begin="click" dur="1000" to="0 180 90"></a-animation> -->
+			</a-gltf-model>
+
+			<!-- 				<a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="blue"></a-plane> -->
+
+		</a-entity>
+
+		<!-- <a-gltf-model id='AvocadoID' src="#Avocado" scale="10 10 10" position="0 0 -3" model-opacity="1">
+			<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
+		</a-gltf-model> -->
+
+		<!-- <a-box position='0 0 0' scale='1 1 1' material='color: blue;' model-opacity="1">
+			<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
+			<a-box position='-2 0 0' material='color: red;'>
+				<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
+			</a-box>
+		</a-box>
+		<a-sphere position="1 0.59 -4" model-opacity="1" click-me>
+			<a-animation attribute="model-opacity" dur="25000" from="1" to="0" repeat="0"></a-animation>
+		</a-sphere> -->
+
+
+		</a-marker>
+		<a-entity camera></a-entity>
+	</a-scene>
+
+	<script>
+
+		// knife model object
+
+		function _knifeObject() {
+			var thisObj = this; // for use in callbacks and eventListeners
+			var modelsExtRet = [2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 19, 20, 23];
+			var moveIndex = 0;
+			this.animationActive = '';
+			var animations = {
+				animation__home: 'property: position; dir: normal; dur: 50; loop: 0; to: 0 0 0; startEvents: home',
+				animation__disassemble: 'property: position; dir: normal; dur: 1000; loop: 0; to: 0.5 0 0; startEvents: disassemble',
+				animation__assemble: 'property: position; dir: normal; dur: 1000; loop: 0; to: 0 0 0; startEvents: assemble',
+				animation__extend: 'property: position; dir: normal; dur: 1000; loop: 0; to: 0.2 0 0; easing: easeOutQuart; startEvents: extend',
+				animation__retract: 'property: position; dir: normal; dur: 1000; loop: 0; to: 0 0 0; easing: easeOutQuart; startEvents: retract',
+			};
+			function startEvents(startEventsName) {
+				for (var key in models) {
+					if (models.hasOwnProperty(key)) {
+						var modelEl = document.getElementById(key);
+						if (modelEl) {
+							modelEl.emit(startEventsName); // call it's startEvents animation event
+						}
+					}
+				}
+			}
+			this.moveAllToHome = function () {
+				thisObj.animationActive = '';
+				moveIndex = 0;
+				startEvents('home');
+			}
+			this.moveEachToDisassemble = function () {
+				thisObj.animationActive = 'moveEachToDisassemble';
+				var numberOfModels = Object.keys(models).length;
+				if (moveIndex < 0) {
+					moveIndex = 0;
+				}
+				if (moveIndex > (numberOfModels - 1)) {
+					document.getElementById('disassembleBtnID').setAttribute('material', 'color:blue');
+				}
+				var modelEl = document.getElementById('model_' + moveIndex);
+				if (modelEl) {
+					modelEl.emit('disassemble'); // call it's startEvents animation event
+					console.log('step: ' + moveIndex);
+				}
+				moveIndex++;
+			}
+			this.moveEachToAssemble = function () {
+				thisObj.animationActive = 'moveEachToAssemble';
+				var numberOfModels = Object.keys(models).length;
+				if (moveIndex > (numberOfModels - 1)) {
+					moveIndex = (numberOfModels - 1);
+				}
+				if (moveIndex < 0) {
+					document.getElementById('assembleBtnID').setAttribute('material', 'color:blue');
+				}
+				var modelEl = document.getElementById('model_' + moveIndex);
+				if (modelEl) {
+					modelEl.emit('assemble'); // call it's startEvents animation event
+					console.log('step: ' + moveIndex);
+				}
+				moveIndex--;
+			}
+			this.moveToExtend = function () {
+				thisObj.animationActive = 'moveToExtend';
+				var array = modelsExtRet;
+				for (var index = 0; index < array.length; index++) {
+					var modelNumber = array[index];
+					// console.log('extend: ' + 'model_' + modelNumber);
+					var modelEl = document.getElementById('model_' + modelNumber);
+					if (modelEl) {
+						modelEl.emit('extend'); // call it's animation event
+					}
+				}
+			}
+			this.moveToRetract = function () {
+				thisObj.animationActive = 'moveToRetract';
+				var array = modelsExtRet;
+				for (var index = 0; index < array.length; index++) {
+					var modelNumber = array[index];
+					var modelEl = document.getElementById('model_' + modelNumber);
+					if (modelEl) {
+						modelEl.emit('retract'); // call it's animation event
+					}
+				}
+			}
+			this.BuildAndAddObjectToScene = function () {
+				//NEED TO SEQUENCE HERE
+				AddModelsToScene();
+				AddAnimationAttributesToModels();
+				AddEventListenerToMainObject();
+			}
+			function AddModelsToScene() {
+				// add them to the assets
+				var assets = document.getElementById('assetsID');
+				var mainModel = document.getElementById('mainModelID');
+				for (var key in models) {
+					if (models.hasOwnProperty(key)) {
+						// var modelEl = document.getElementById(key);
+						// if (modelEl) {
+						var modelNumber = parseInt(key.split('_')[1], 10);  // get 2nd piece, which is the model number.
+						var modelID = 'model_' + modelNumber; // example: model_1
+
+						// add 'a-asset-item' for all models
+						var assetItem = document.createElement('a-asset-item');
+						var assetItemData = {
+							id: modelID + '_AssetItem',
+							src: 'lib/model/953959X/' + modelID + '.gltf'
+						};
+						for (var aData in assetItemData) {
+							if (assetItemData.hasOwnProperty(aData)) {
+								assetItem.setAttribute(aData, assetItemData[aData]);
+							}
+						}
+						assets.appendChild(assetItem);
+
+						// add 'a-gltf-model' for all models
+						var gltfModel = document.createElement('a-gltf-model');
+						var gltfModelData = {
+							id: modelID,
+							src: '#' + modelID + '_AssetItem',
+							// scale: '5 5 5',
+							// position: '2.651 1.500 -5'
+						};
+						for (var gData in gltfModelData) {
+							if (gltfModelData.hasOwnProperty(gData)) {
+								gltfModel.setAttribute(gData, gltfModelData[gData]);
+							}
+						}
+						mainModel.appendChild(gltfModel);
+						console.log('created: ' + modelID);
+						// }
+					}
+				}
+			}
+			function AddAnimationAttributesToModels() {
+				for (var key in models) {
+					if (models.hasOwnProperty(key)) {
+						var modelEl = document.getElementById(key);
+						if (modelEl) {
+							var modelNumber = parseInt(key.split('_')[1], 10);  // get 2nd piece, which is the model number.
+							for (var keyA in animations) {
+								if (animations.hasOwnProperty(keyA)) {
+									if (keyA == 'animation__extend' || keyA == 'animation__retract') {
+										// only add extend and retract for the ones in the array list
+										if (modelsExtRet.indexOf(modelNumber) > -1) {
+											modelEl.setAttribute(keyA, animations[keyA]);
+										}
+									} else {
+										modelEl.setAttribute(keyA, animations[keyA]);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			this.animationTiming;
+			function AddEventListenerToMainObject() {
+				document.getElementById('mainModelID').addEventListener('animationcomplete', function (e) {
+					clearTimeout(thisObj.animationTiming);
+					if (thisObj.animationActive != '') {
+						thisObj.animationTiming = setTimeout(function () { thisObj.animationLoopCallback(); }, 100);
+					}
+				});
+			}
+			this.animationLoopCallback = function () {
+				if (thisObj.animationActive == 'moveToExtend') {
+					thisObj.animationActive = 'moveToRetract';
+				} else if (thisObj.animationActive == 'moveToRetract') {
+					thisObj.animationActive = 'moveToExtend';
+				}
+				if (thisObj.animationActive != '') {
+					thisObj[thisObj.animationActive]();
+				}
+			}
+			var models = {
+				model_0: { name: 'guideBarBlockFasteners' },
+				model_1: { name: 'cylinderFastenerBolts' },
+				model_2: { name: 'cylinderFastenerWashers' },
+				model_3: { name: 'pneumaticCylinder' },
+				model_4: { name: 'cylinderAdapterNut' },
+				model_5: { name: 'bushings' },
+				model_6: { name: 'blockOfMica' },
+				model_7: { name: 'cylinderAdapter1' },
+				model_8: { name: 'cylinderAdapter2' },
+				model_9: { name: 'cylinderAdapter3' },
+				model_10: { name: 'bladeHolders1' },
+				model_11: { name: 'bladeArms' },
+				model_12: { name: 'blade' },
+				model_13: { name: 'bladeHolders2' },
+				model_14: { name: 'bladeHolders3' },
+				model_15: { name: 'cylinderAdapter4' },
+				model_16: { name: 'cylinderAdapter5' },
+				model_17: { name: 'guideBarBlocksSomething' },
+				model_18: { name: 'guideBarBlocksBushings' },
+				model_19: { name: 'bladeFasteners' },
+				model_20: { name: 'guideBarFasteners' },
+				model_21: { name: 'guideBarBlocks' },
+				model_22: { name: 'guideBarBlockFastenersWashers' },
+				model_23: { name: 'guideBarWashers' },
+				model_24: { name: 'mountingBlock' }
+			}
+		}
+
+		var knifeObject = new _knifeObject(); // create an object to use;
+
+		// font setup for all text
+		function SetAllTextFontTo(fontNameWithExtension, fontImageWithExtension) {
+			var textNodes = document.getElementsByTagName('a-text');
+			for (var i = 0; i < textNodes.length; i++) {
+				textNodes[i].setAttribute('font', 'lib/fonts/' + fontNameWithExtension);
+				textNodes[i].setAttribute('fontImage', 'lib/fonts/' + fontImageWithExtension);
+				console.log('set font for text: ' + textNodes[i].getAttribute('value'));
+			}
+		}
+
+
+		function AddModelToScene() {
+				// add them to the assets
+				var assets = document.getElementById('assetsID');
+				var mainModel = document.getElementById('mainModelID');
+				for (var key in models) {
+					if (models.hasOwnProperty(key)) {
+						// var modelEl = document.getElementById(key);
+						// if (modelEl) {
+						var modelNumber = parseInt(key.split('_')[1], 10);  // get 2nd piece, which is the model number.
+						var modelID = 'model_' + modelNumber; // example: model_1
+
+						// add 'a-asset-item' for all models
+						var assetItem = document.createElement('a-asset-item');
+						var assetItemData = {
+							id: modelID + '_AssetItem',
+							src: 'lib/model/953959X/' + modelID + '.gltf'
+						};
+						for (var aData in assetItemData) {
+							if (assetItemData.hasOwnProperty(aData)) {
+								assetItem.setAttribute(aData, assetItemData[aData]);
+							}
+						}
+						assets.appendChild(assetItem);
+
+						// add 'a-gltf-model' for all models
+						var gltfModel = document.createElement('a-gltf-model');
+						var gltfModelData = {
+							id: modelID,
+							src: '#' + modelID + '_AssetItem',
+							// scale: '5 5 5',
+							// position: '2.651 1.500 -5'
+						};
+						for (var gData in gltfModelData) {
+							if (gltfModelData.hasOwnProperty(gData)) {
+								gltfModel.setAttribute(gData, gltfModelData[gData]);
+							}
+						}
+						mainModel.appendChild(gltfModel);
+						console.log('created: ' + modelID);
+						// }
+					}
+				}
+			}
+
+
+
+		// self executing function starts when the page is fully loaded.
+		(function () {
+			// your page initialization code here
+			// the DOM will be available here
+			// knifeObject.BuildAndAddObjectToScene();
+			// SetAllTextFontTo('Roboto-msdf.json', 'Roboto-msdf.png');
+			// AddModelToScene();
+		})();
+
+
+
+	</script>
+
+
+</body>
+
+</html>
